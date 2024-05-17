@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Net.SimpleBlog.Domain.Entity;
+using Net.SimpleBlog.Infra.Data.EF.Configurations;
 
 namespace Net.SimpleBlog.Infra.Data.EF;
 public class NetSimpleBlogDbContext

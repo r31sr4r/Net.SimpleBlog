@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Net.SimpleBlog.Application.Exceptions;
 using Net.SimpleBlog.Domain.Entity;
 using Net.SimpleBlog.Domain.Repository;
 using Net.SimpleBlog.Domain.SeedWork.SearchableRepository;

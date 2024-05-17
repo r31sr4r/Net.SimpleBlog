@@ -1,4 +1,6 @@
 ﻿using Net.SimpleBlog.Domain.Entity;
+using Net.SimpleBlog.Domain.SeedWork;
+using Net.SimpleBlog.Domain.SeedWork.SearchableRepository;
 
 namespace Net.SimpleBlog.Domain.Repository;
 public interface IUserRepository

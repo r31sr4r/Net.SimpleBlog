@@ -13,6 +13,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Net.SimpleBlog.Domain\Net.SimpleBlog.Domain.csproj" />
+    <ProjectReference Include="..\Net.SimpleBlog.Application\Net.SimpleBlog.Application.csproj" />
+    <ProjectReference Include="..\Net.SimpleBlog.Domain\Net.SimpleBlog.Domain.csproj" />
   </ItemGroup>
 
 </Project>
