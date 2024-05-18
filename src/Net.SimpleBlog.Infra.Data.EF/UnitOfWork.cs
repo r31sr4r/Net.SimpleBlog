@@ -1,7 +1,7 @@
 ﻿using Net.SimpleBlog.Application.Interfaces;
 using Net.SimpleBlog.Infra.Data.EF;
 
-namespace FC.Codeflix.Catalog.Infra.Data.EF;
+namespace Net.SimpleBlog.Infra.Data.EF;
 public class UnitOfWork
     : IUnitOfWork
 {

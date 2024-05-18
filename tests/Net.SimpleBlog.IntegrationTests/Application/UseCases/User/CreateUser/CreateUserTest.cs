@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using UseCase = Net.SimpleBlog.Application.UseCases.User.CreateUser;
-using FC.Codeflix.Catalog.Infra.Data.EF;
+using Net.SimpleBlog.Infra.Data.EF;
 
 namespace Net.SimpleBlog.IntegrationTests.Application.UseCases.User.CreateUser;
 

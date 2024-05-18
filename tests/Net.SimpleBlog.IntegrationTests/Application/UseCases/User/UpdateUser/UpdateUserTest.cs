@@ -10,7 +10,7 @@ using Net.SimpleBlog.Domain.Exceptions;
 using Net.SimpleBlog.Application;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using FC.Codeflix.Catalog.Infra.Data.EF;
+using Net.SimpleBlog.Infra.Data.EF;
 
 namespace Net.SimpleBlog.IntegrationTests.Application.UseCases.User.UpdateUser;
 
