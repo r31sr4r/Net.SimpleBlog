@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Net.SimpleBlog.Domain", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.SimpleBlog.Application", "src\Net.SimpleBlog.Application\Net.SimpleBlog.Application.csproj", "{5C9025C3-9B97-4B85-9756-2444B439BDCF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Net.SimpleBlog.IntegrationTests", "tests\Net.SimpleBlog.IntegrationTests\Net.SimpleBlog.IntegrationTests.csproj", "{1004A8F6-B25B-44F1-967D-F1D940B55DE5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +39,10 @@ Global
 		{5C9025C3-9B97-4B85-9756-2444B439BDCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C9025C3-9B97-4B85-9756-2444B439BDCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C9025C3-9B97-4B85-9756-2444B439BDCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1004A8F6-B25B-44F1-967D-F1D940B55DE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1004A8F6-B25B-44F1-967D-F1D940B55DE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1004A8F6-B25B-44F1-967D-F1D940B55DE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1004A8F6-B25B-44F1-967D-F1D940B55DE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +52,7 @@ Global
 		{8DBAC535-C8AB-4785-ACB4-A370713EDE48} = {0D71241B-9D38-46DC-BC86-C8310362B17B}
 		{C36D02FF-8A84-4768-96D2-9C9B46A48066} = {0D71241B-9D38-46DC-BC86-C8310362B17B}
 		{5C9025C3-9B97-4B85-9756-2444B439BDCF} = {0D71241B-9D38-46DC-BC86-C8310362B17B}
+		{1004A8F6-B25B-44F1-967D-F1D940B55DE5} = {1177CB7E-754C-4393-BCBC-83B3C20C9DDD}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9B98D997-BC76-42EF-BBDC-F50666A9FCD8}
