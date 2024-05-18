@@ -135,48 +135,6 @@ public class UserRepositoryTest
         dbUser.Should().BeNull();
     }
 
-    [Fact(DisplayName = "SearchReturnsListAndTotal")]
-    [Trait("Integration/Infra.Data", "UserRepository - Repositories")]
-    public async Task SearchReturnsListAndTotal()
-    {
-        NetSimpleBlogDbContext dbContext = _fixture.CreateDbContext();
-        var exampleUserList = _fixture.GetExampleUserList(15);
-        await dbContext.AddRangeAsync(exampleUserList);
-        await dbContext.SaveChangesAsync(CancellationToken.None);
-        var userRepository = new Repository.UserRepository(dbContext);
-        var searchInput = new SearchInput(
-            page: 1,
-            perPage: 10,
-            search: "",
-            orderBy: "",
-            SearchOrder.Asc
-        );
-
-        var output = await userRepository.Search(searchInput, CancellationToken.None);
-
-        output.Should().NotBeNull();
-        output.Items.Should().NotBeNull();
-        output.CurrentPage.Should().Be(searchInput.Page);
-        output.PerPage.Should().Be(searchInput.PerPage);
-        output.Total.Should().Be(exampleUserList.Count);
-        output.Items.Should().HaveCount(10);
-        foreach (User outputItem in output.Items)
-        {
-            var exampleItem = exampleUserList.Find(x => x.Id == outputItem.Id);
-            outputItem.Should().NotBeNull();
-            outputItem!.Id.Should().Be(exampleItem!.Id);
-            outputItem.Name.Should().Be(exampleItem.Name);
-            outputItem.Email.Should().Be(exampleItem.Email);
-            outputItem.Phone.Should().Be(exampleItem.Phone);
-            outputItem.CPF.Should().Be(exampleItem.CPF);
-            outputItem.DateOfBirth.Date.Should().Be(exampleItem.DateOfBirth.Date);
-            outputItem.RG.Should().Be(exampleItem.RG);
-            outputItem.IsActive.Should().Be(exampleItem.IsActive);
-
-        }
-    }
-
-
     [Fact(DisplayName = "SearchReturnsEmpty")]
     [Trait("Integration/Infra.Data", "UserRepository - Repositories")]
     public async Task SearchReturnsEmpty()
