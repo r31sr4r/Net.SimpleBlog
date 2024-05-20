@@ -21,7 +21,7 @@ public static class ConnectionsConfiguration
     {
         var connectionString = configuration.GetConnectionString("NetSimpleBlogDb");
         services.AddDbContext<NetSimpleBlogDbContext>(
-            options => options.UseMySql(
+            options =>  options.UseMySql(
                 connectionString,
                 ServerVersion.AutoDetect(connectionString)
             )
