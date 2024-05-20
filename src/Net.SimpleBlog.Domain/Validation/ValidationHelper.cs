@@ -67,7 +67,7 @@ public class ValidationHelper
 
     public static bool IsValidPhone(string phone)
     {
-        var regex = new Regex(@"^\(\d{2}\) \d{4,5}-\d{4}$");
+        var regex = new Regex(@"^\(\d{2}\)\s?\d{4,5}-\d{4}$");
         return regex.IsMatch(phone.Trim());
     }
 

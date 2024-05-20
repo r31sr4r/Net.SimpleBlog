@@ -48,7 +48,7 @@ public class ValidationHelperTest
     [Theory(DisplayName = nameof(PhoneIsValid))]
     [Trait("Domain", "Helpers")]
     [InlineData("(11) 1234-5678")]
-    [InlineData("(11) 91234-5678")]
+    [InlineData("(11)91234-5678")]
     public void PhoneIsValid(string validPhone)
     {
         bool result = ValidationHelper.IsValidPhone(validPhone);
@@ -58,7 +58,7 @@ public class ValidationHelperTest
     [Theory(DisplayName = nameof(PhoneIsInvalid))]
     [Trait("Domain", "Helpers")]
     [InlineData("1111-1111")]
-    [InlineData("(11)1234-5678")]
+    [InlineData("(11)  1234-5678")]
     [InlineData("(11) 912345678")]
     public void PhoneIsInvalid(string invalidPhone)
     {

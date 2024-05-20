@@ -1,0 +1,12 @@
+﻿version: '3.4'
+
+services:
+
+  netsimpleblog.db:
+    container_name: netsimpleblogdb.e2e
+    hostname: netsimpleblogdb.e2e
+    image: mysql
+    ports:
+      - 33060:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: N3ts1mpl3bl0g@

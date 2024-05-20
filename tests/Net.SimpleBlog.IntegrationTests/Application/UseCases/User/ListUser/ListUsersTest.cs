@@ -5,7 +5,6 @@ using UseCase = Net.SimpleBlog.Application.UseCases.User.ListUsers;
 using FluentAssertions;
 using Net.SimpleBlog.Application.UseCases.User.Common;
 using Net.SimpleBlog.Domain.SeedWork.SearchableRepository;
-using Net.SimpleBlog.Domain.SeedWork;
 
 namespace Net.SimpleBlog.IntegrationTests.Application.UseCases.User.ListUser;
 
