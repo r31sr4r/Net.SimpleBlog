@@ -2,18 +2,20 @@
 using Net.SimpleBlog.Domain.Entity;
 using Net.SimpleBlog.Infra.Data.EF.Configurations;
 
-namespace Net.SimpleBlog.Infra.Data.EF;
-public class NetSimpleBlogDbContext
-    : DbContext
+namespace Net.SimpleBlog.Infra.Data.EF
 {
-    public DbSet<User> Users => Set<User>();
-
-    public NetSimpleBlogDbContext(
-        DbContextOptions<NetSimpleBlogDbContext> options)
-    : base(options) { }
-
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    public class NetSimpleBlogDbContext : DbContext
     {
-        modelBuilder.ApplyConfiguration(new UserConfiguration());
+        public DbSet<User> Users => Set<User>();
+        public DbSet<Post> Posts => Set<Post>();
+
+        public NetSimpleBlogDbContext(DbContextOptions<NetSimpleBlogDbContext> options)
+            : base(options) { }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.ApplyConfiguration(new UserConfiguration());
+            modelBuilder.ApplyConfiguration(new PostConfiguration());
+        }
     }
 }
