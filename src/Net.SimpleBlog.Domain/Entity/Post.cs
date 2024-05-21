@@ -41,5 +41,9 @@ public class Post : AggregateRoot
             throw new EntityValidationException($"{nameof(Title)} should be less than 255 characters");
         if (string.IsNullOrWhiteSpace(Content))
             throw new EntityValidationException($"{nameof(Content)} should not be empty or null");
+        if (Content.Length <= 3)
+            throw new EntityValidationException($"{nameof(Content)} should be greater than 3 characters");
+        if (Content.Length >= 10000)
+            throw new EntityValidationException($"{nameof(Content)} should be less than 10000 characters");
     }
 }
