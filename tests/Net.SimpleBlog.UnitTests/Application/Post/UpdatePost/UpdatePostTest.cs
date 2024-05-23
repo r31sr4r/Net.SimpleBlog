@@ -111,6 +111,7 @@ public class UpdatePostTest
     {
         var post = _fixture.GetValidPost();
         input.Id = post.Id;
+        input.UserId = post.UserId;
         var repositoryMock = _fixture.GetRepositoryMock();
         var unitOfWorkMock = _fixture.GetUnitOfWorkMock();
         repositoryMock.Setup(repository => repository.Get(
@@ -135,4 +136,52 @@ public class UpdatePostTest
                 ), Times.Once
         );
     }
+
+    [Fact(DisplayName = nameof(ThrowWhenUserIsNotOwner))]
+    [Trait("Application", "UpdatePost - Use Cases")]
+    public async Task ThrowWhenUserIsNotOwner()
+    {
+        var repositoryMock = _fixture.GetRepositoryMock();
+        var unitOfWorkMock = _fixture.GetUnitOfWorkMock();
+        var post = _fixture.GetValidPost();
+        var anotherUserId = Guid.NewGuid();
+
+        repositoryMock.Setup(repository => repository.Get(
+            post.Id,
+            It.IsAny<CancellationToken>())
+        ).ReturnsAsync(post);
+
+        var input = new UpdatePostInput(post.Id, "New Title", "New Content", anotherUserId);
+        
+        var useCase = new UseCases.UpdatePost(
+            repositoryMock.Object,
+            unitOfWorkMock.Object
+        );
+
+        Func<Task> task = async () => await useCase.Handle(input, CancellationToken.None);
+
+        await task.Should().ThrowAsync<UnauthorizedAccessException>()
+            .WithMessage("You are not the owner of this post.");
+
+        repositoryMock.Verify(
+            repository => repository.Get(
+                post.Id,
+                It.IsAny<CancellationToken>()
+            ), Times.Once
+        );
+
+        repositoryMock.Verify(
+            repository => repository.Update(
+                It.IsAny<DomainEntity.Post>(),
+                It.IsAny<CancellationToken>()
+            ), Times.Never
+        );
+
+        unitOfWorkMock.Verify(
+            unitOfWork => unitOfWork.Commit(
+                It.IsAny<CancellationToken>()
+            ), Times.Never
+        );
+    }
+
 }

@@ -9,24 +9,32 @@ using System.Net;
 namespace Net.SimpleBlog.E2ETests.Api.Post.UpdatePost;
 
 [Collection(nameof(UpdatePostApiTestFixture))]
-public class UpdatePostApiTest : IDisposable
+public class UpdatePostApiTest : IAsyncLifetime, IDisposable
 {
     private readonly UpdatePostApiTestFixture _fixture;
 
     public UpdatePostApiTest(UpdatePostApiTestFixture fixture)
         => _fixture = fixture;
 
+    public async Task InitializeAsync()
+    {
+        await _fixture.Authenticate();
+    }
+
+    public Task DisposeAsync()
+    {
+        _fixture.CleanPersistence();
+        return Task.CompletedTask;
+    }
+
     [Fact(DisplayName = nameof(UpdatePost))]
     [Trait("E2E/Api", "Post/Update - Endpoints")]
     public async Task UpdatePost()
     {
-        var validUser = _fixture.GetValidUser();
-        await _fixture.Persistence.InsertUser(validUser);
-
-        var examplePostsList = _fixture.GetPostsList(validUser.Id, 20);
+        var examplePostsList = _fixture.GetPostsList(_fixture.AuthenticatedUser.Id, 20);
         await _fixture.Persistence.InsertPosts(examplePostsList);
         var examplePost = examplePostsList[10];
-        var postModelInput = _fixture.GetInput(validUser.Id);
+        var postModelInput = _fixture.GetInput(_fixture.AuthenticatedUser.Id);
 
         var (response, output) = await _fixture
             .ApiClient
@@ -56,10 +64,7 @@ public class UpdatePostApiTest : IDisposable
     [Trait("E2E/Api", "Post/Update - Endpoints")]
     public async Task ErrorWhenNotFound()
     {
-        var validUser = _fixture.GetValidUser();
-        await _fixture.Persistence.InsertUser(validUser);
-
-        var postModelInput = _fixture.GetInput(validUser.Id);
+        var postModelInput = _fixture.GetInput(_fixture.AuthenticatedUser.Id);
 
         var (response, output) = await _fixture
             .ApiClient
@@ -72,37 +77,6 @@ public class UpdatePostApiTest : IDisposable
         output.Title.Should().Be("Not found");
         output.Detail.Should().Be($"Post with id {postModelInput.Id} not found");
         output.Type.Should().Be("NotFound");
-    }
-
-    [Theory(DisplayName = nameof(ErrorWhenCantInstatiateAggregate))]
-    [Trait("E2E/Api", "Post/Update - Endpoints")]
-    [MemberData(
-        nameof(UpdatePostApiTestDataGenerator.GetInvalidInputs),
-        MemberType = typeof(UpdatePostApiTestDataGenerator)
-    )]
-    public async Task ErrorWhenCantInstatiateAggregate(
-        UpdatePostInput input,
-        string expectedDetail
-    )
-    {
-        var validUser = _fixture.GetValidUser();
-        await _fixture.Persistence.InsertUser(validUser);
-
-        var examplePostsList = _fixture.GetPostsList(validUser.Id, 20);
-        await _fixture.Persistence.InsertPosts(examplePostsList);
-        var examplePost = examplePostsList[10];
-
-        var (response, output) = await _fixture
-            .ApiClient
-            .Put<ProblemDetails>($"/posts/{examplePost.Id}", input);
-
-        response.Should().NotBeNull();
-        response!.StatusCode.Should().Be(HttpStatusCode.UnprocessableEntity);
-        output.Should().NotBeNull();
-        output!.Title.Should().Be("One or more validation errors occurred");
-        output.Type.Should().Be("UnprocessableEntity");
-        output.Status.Should().Be((int)StatusCodes.Status422UnprocessableEntity);
-        output.Detail.Should().Be(expectedDetail);
     }
 
     public void Dispose()

@@ -1,32 +1,25 @@
 ﻿using Net.SimpleBlog.Application.UseCases.Post.CreatePost;
+using Net.SimpleBlog.Domain.Entity;
 using Net.SimpleBlog.E2ETests.Api.Post.Common;
-
-namespace Net.SimpleBlog.E2ETests.Api.Post.CreatePost;
+using Net.SimpleBlog.E2ETests.Base;
+using Microsoft.EntityFrameworkCore;
+using Net.SimpleBlog.Infra.Data.EF;
 
 [CollectionDefinition(nameof(CreatePostApiTestFixture))]
-public class CreatePostApiTestFixtureCollection : ICollectionFixture<CreatePostApiTestFixture>
+public class CreatePostApiTestFixtureCollection
+    : ICollectionFixture<CreatePostApiTestFixture>
 { }
 
 public class CreatePostApiTestFixture : PostBaseFixture
 {
-    public CreatePostInput GetInput(Guid userId)
-    {
-        var post = GetValidPost(userId);
-        return new CreatePostInput(
-            post.Title,
-            post.Content,
-            userId
-        );
-    }
-
+    
     public CreatePostInput GetInput()
     {
-        var user = GetValidUser();
-        var post = GetValidPost(user.Id);
+        var post = GetValidPost(AuthenticatedUser.Id);
         return new CreatePostInput(
             post.Title,
             post.Content,
-            user.Id
+            AuthenticatedUser.Id
         );
     }
 }

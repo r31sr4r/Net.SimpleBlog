@@ -1,11 +1,11 @@
-﻿
-
-namespace Net.SimpleBlog.E2ETests.Api.Post.CreatePost;
+﻿namespace Net.SimpleBlog.E2ETests.Api.Post.CreatePost;
 public class CreatePostApiTestDataGenerator
 {
     public static IEnumerable<object[]> GetInvalidInputs()
     {
         var fixture = new CreatePostApiTestFixture();
+        fixture.Authenticate().GetAwaiter().GetResult();
+
         var invalidInputsList = new List<object[]>();
         var totalInvalidCases = 4;
 

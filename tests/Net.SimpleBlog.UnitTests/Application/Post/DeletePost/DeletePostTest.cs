@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using Moq;
 using Net.SimpleBlog.Application.Exceptions;
+using Net.SimpleBlog.Domain.Entity;
 using Xunit;
 using UseCases = Net.SimpleBlog.Application.UseCases.Post.DeletePost;
 
@@ -23,13 +24,14 @@ public class DeletePostTest
         var repositoryMock = _fixture.GetRepositoryMock();
         var unitOfWorkMock = _fixture.GetUnitOfWorkMock();
         var postExample = _fixture.GetValidPost();
+        var userId = postExample.UserId;
 
         repositoryMock.Setup(repository => repository.Get(
             postExample.Id,
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(postExample);
 
-        var input = new UseCases.DeletePostInput(postExample.Id);
+        var input = new UseCases.DeletePostInput(postExample.Id, userId);
         var useCase = new UseCases.DeletePost(
             repositoryMock.Object,
             unitOfWorkMock.Object
@@ -65,6 +67,7 @@ public class DeletePostTest
         var repositoryMock = _fixture.GetRepositoryMock();
         var unitOfWorkMock = _fixture.GetUnitOfWorkMock();
         var postGuid = Guid.NewGuid();
+        var userId = Guid.NewGuid();
 
         repositoryMock.Setup(repository => repository.Get(
             postGuid,
@@ -73,7 +76,7 @@ public class DeletePostTest
             new NotFoundException($"Post '{postGuid}' not found")
         );
 
-        var input = new UseCases.DeletePostInput(postGuid);
+        var input = new UseCases.DeletePostInput(postGuid, userId);
         var useCase = new UseCases.DeletePost(
             repositoryMock.Object,
             unitOfWorkMock.Object

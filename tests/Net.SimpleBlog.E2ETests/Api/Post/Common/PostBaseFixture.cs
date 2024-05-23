@@ -14,11 +14,27 @@ public class PostBaseFixture
     : BaseFixture
 {
     public PostPersistence Persistence { get; private set; }
+    public DomainEntity.User AuthenticatedUser { get; private set; }
 
     public PostBaseFixture()
         : base()
     {
         Persistence = new PostPersistence(CreateDbContext());
+    }
+
+    public async Task Authenticate()
+    {
+        AuthenticatedUser = GetValidUser();
+        var existingUser = await Persistence.GetUserByEmail(AuthenticatedUser.Email);
+        if (existingUser == null)
+        {
+            await Persistence.InsertUser(AuthenticatedUser);
+        }
+        else
+        {
+            AuthenticatedUser = existingUser;
+        }
+        await ApiClient.AuthenticateAsync(AuthenticatedUser.Email, "ValidPassword123!");
     }
 
     // Métodos para usuários

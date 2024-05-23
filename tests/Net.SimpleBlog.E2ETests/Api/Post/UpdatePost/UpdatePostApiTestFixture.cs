@@ -1,4 +1,5 @@
-﻿using Net.SimpleBlog.Application.UseCases.Post.UpdatePost;
+﻿using Net.SimpleBlog.Application.UseCases.Post.CreatePost;
+using Net.SimpleBlog.Application.UseCases.Post.UpdatePost;
 using Net.SimpleBlog.E2ETests.Api.Post.Common;
 
 namespace Net.SimpleBlog.E2ETests.Api.Post.UpdatePost;
@@ -15,7 +16,8 @@ public class UpdatePostApiTestFixture : PostBaseFixture
         return new UpdatePostInput(
             post.Id,
             post.Title,
-            post.Content
+            post.Content,
+            userId
         );
     }
 }

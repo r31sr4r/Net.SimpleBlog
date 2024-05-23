@@ -12,11 +12,12 @@ public class UpdatePostTestFixtureCollection
 public class UpdatePostTestFixture
     : PostUseCasesBaseFixture
 {
-    public UpdatePostInput GetValidInput(Guid? id = null)
+    public UpdatePostInput GetValidInput(Guid? id = null, Guid? userId = null)
         => new UpdatePostInput(
                 id ?? Guid.NewGuid(),
                 GetValidTitle(),
-                GetValidContent()
+                GetValidContent(),
+                userId ?? Guid.NewGuid()
     );
 
     public UpdatePostInput GetInvalidInputShortTitle()

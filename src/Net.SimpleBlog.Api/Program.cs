@@ -29,16 +29,9 @@ app.UseHttpsRedirection();
 app.UseWebSocketSupport();
 Log.Information("WebSocket Support Enabled");
 
+app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
-
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "WebSockets")),
-    RequestPath = "/websockets"
-});
-
-Log.Information("Static file serving enabled for path /websockets");
 
 app.Run();
 

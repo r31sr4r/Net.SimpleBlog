@@ -1,10 +1,10 @@
 ﻿using Bogus;
-using Net.SimpleBlog.Infra.Data.EF;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Net.SimpleBlog.Infra.Data.EF;
 
 namespace Net.SimpleBlog.E2ETests.Base;
-public class BaseFixture : IDisposable
+public class BaseFixture
 {
     protected Faker Faker { get; set; }
 
@@ -44,10 +44,5 @@ public class BaseFixture : IDisposable
         var context = CreateDbContext();
         context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
-    }
-
-    public void Dispose()
-    {
-        WebAppFactory.Dispose();
     }
 }

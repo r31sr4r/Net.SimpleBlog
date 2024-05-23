@@ -19,6 +19,11 @@ public class UpdatePost : IUpdatePost
     {
         var post = await _postRepository.Get(request.Id, cancellationToken);
 
+        if (post.UserId != request.UserId)
+        {
+            throw new UnauthorizedAccessException("You are not the owner of this post.");
+        }
+
         post.Update(request.Title, request.Content);
 
         await _postRepository.Update(post, cancellationToken);

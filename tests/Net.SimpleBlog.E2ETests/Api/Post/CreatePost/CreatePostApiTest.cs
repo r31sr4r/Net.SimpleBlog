@@ -5,25 +5,34 @@ using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
+using Xunit;
 
 namespace Net.SimpleBlog.E2ETests.Api.Post.CreatePost;
 
 [Collection(nameof(CreatePostApiTestFixture))]
-public class CreatePostApiTest : IDisposable
+public class CreatePostApiTest : IAsyncLifetime, IDisposable
 {
     private readonly CreatePostApiTestFixture _fixture;
 
     public CreatePostApiTest(CreatePostApiTestFixture fixture)
         => _fixture = fixture;
 
+    public async Task InitializeAsync()
+    {
+        await _fixture.Authenticate();
+    }
+
+    public Task DisposeAsync()
+    {
+        _fixture.CleanPersistence();
+        return Task.CompletedTask;
+    }
+
     [Fact(DisplayName = nameof(CreatePost))]
     [Trait("E2E/Api", "Post/Create - Endpoints")]
     public async Task CreatePost()
     {
-        var validUser = _fixture.GetValidUser();
-        await _fixture.Persistence.InsertUser(validUser);
-
-        var input = _fixture.GetInput(validUser.Id);
+        var input = _fixture.GetInput();
 
         var (response, output) = await _fixture
             .ApiClient
@@ -61,9 +70,8 @@ public class CreatePostApiTest : IDisposable
         string expectedDetail
     )
     {
-        var validUser = _fixture.GetValidUser();
-        await _fixture.Persistence.InsertUser(validUser);
-        input.UserId = validUser.Id;  
+        var validUser = _fixture.AuthenticatedUser;
+        input.UserId = validUser.Id;
 
         var (response, output) = await _fixture
             .ApiClient

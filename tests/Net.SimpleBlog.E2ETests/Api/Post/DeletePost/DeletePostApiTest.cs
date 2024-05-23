@@ -1,26 +1,36 @@
 ﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Net.SimpleBlog.E2ETests.Api.Post.Common;
 using System.Net;
+using Xunit;
 
 namespace Net.SimpleBlog.E2ETests.Api.Post.DeletePost;
 
-[Collection(nameof(DeletePostApiTestFixture))]
-public class DeletePostApiTest : IDisposable
+[Collection(nameof(PostBaseFixture))]
+public class DeletePostApiTest : IAsyncLifetime, IDisposable
 {
-    private readonly DeletePostApiTestFixture _fixture;
+    private readonly PostBaseFixture _fixture;
 
-    public DeletePostApiTest(DeletePostApiTestFixture fixture)
+    public DeletePostApiTest(PostBaseFixture fixture)
         => _fixture = fixture;
+
+    public async Task InitializeAsync()
+    {
+        await _fixture.Authenticate();
+    }
+
+    public Task DisposeAsync()
+    {
+        _fixture.CleanPersistence();
+        return Task.CompletedTask;
+    }
 
     [Fact(DisplayName = nameof(DeletePost))]
     [Trait("E2E/Api", "Post/Delete - Endpoints")]
     public async Task DeletePost()
     {
-        var validUser = _fixture.GetValidUser();
-        await _fixture.Persistence.InsertUser(validUser);
-
-        var examplePostsList = _fixture.GetPostsList(validUser.Id, 20);
+        var examplePostsList = _fixture.GetPostsList(_fixture.AuthenticatedUser.Id, 20);
         await _fixture.Persistence.InsertPosts(examplePostsList);
         var examplePost = examplePostsList[10];
 
@@ -41,10 +51,7 @@ public class DeletePostApiTest : IDisposable
     [Trait("E2E/Api", "Post/Delete - Endpoints")]
     public async Task ErrorWhenNotFound()
     {
-        var validUser = _fixture.GetValidUser();
-        await _fixture.Persistence.InsertUser(validUser);
-
-        var examplePostsList = _fixture.GetPostsList(validUser.Id, 20);
+        var examplePostsList = _fixture.GetPostsList(_fixture.AuthenticatedUser.Id, 20);
         await _fixture.Persistence.InsertPosts(examplePostsList);
         var randomGuid = Guid.NewGuid();
 

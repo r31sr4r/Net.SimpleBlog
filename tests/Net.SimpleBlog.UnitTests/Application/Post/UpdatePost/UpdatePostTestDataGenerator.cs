@@ -8,7 +8,7 @@ public class UpdatePostTestDataGenerator
         for (int indice = 0; indice < times; indice++)
         {
             var examplePost = fixture.GetValidPost();
-            var exampleInput = fixture.GetValidInput(examplePost.Id);
+            var exampleInput = fixture.GetValidInput(examplePost.Id, examplePost.UserId);
             yield return new object[] { examplePost, exampleInput };
         }
     }

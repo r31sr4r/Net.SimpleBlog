@@ -26,6 +26,7 @@ namespace Net.SimpleBlog.Api.Common.Utilities
             {
                 new Claim(JwtRegisteredClaimNames.Sub, user.Email),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim("UID", user.Id.ToString())
             };
 
             var token = new JwtSecurityToken(

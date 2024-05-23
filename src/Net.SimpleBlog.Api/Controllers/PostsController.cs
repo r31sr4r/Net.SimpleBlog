@@ -1,4 +1,5 @@
-﻿using Net.SimpleBlog.Api.ApiModels.Response;
+﻿using Microsoft.AspNetCore.Authorization;
+using Net.SimpleBlog.Api.ApiModels.Response;
 using Net.SimpleBlog.Api.ApiModels.Post;
 using Net.SimpleBlog.Api.WebSockets;
 using Net.SimpleBlog.Application.UseCases.Post.Common;
@@ -10,11 +11,13 @@ using Net.SimpleBlog.Application.UseCases.Post.UpdatePost;
 using Net.SimpleBlog.Domain.SeedWork.SearchableRepository;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Net.SimpleBlog.Api.Extensions;
 
 namespace Net.SimpleBlog.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+[Authorize]
 public class PostsController : ControllerBase
 {
     private readonly ILogger<PostsController> _logger;
@@ -37,10 +40,22 @@ public class PostsController : ControllerBase
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
     public async Task<IActionResult> Create(
-        [FromBody] CreatePostInput input,
+        [FromBody] CreatePostApiInput apiInput,
         CancellationToken cancellationToken
         )
     {
+        var userId = User.GetUserId();
+        if (userId == null)
+        {
+            return Forbid();
+        }
+
+        var input = new CreatePostInput(
+            apiInput.Title,
+            apiInput.Content,
+            userId.Value 
+        );
+
         var result = await _mediator.Send(input, cancellationToken);
         await _webSocketManager.BroadcastMessageAsync($"New post created: {result.Title}");
 
@@ -51,6 +66,7 @@ public class PostsController : ControllerBase
         );
     }
 
+    [AllowAnonymous]
     [HttpGet("{id:guid}")]
     [ProducesResponseType(typeof(ApiResponse<PostModelOutput>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
@@ -75,10 +91,21 @@ public class PostsController : ControllerBase
         CancellationToken cancellationToken
     )
     {
-        await _mediator.Send(
-            new DeletePostInput(id),
-            cancellationToken
-        );
+        var userId = User.GetUserId();
+        if (userId == null)
+        {
+            return Forbid();
+        }
+
+        var post = await _mediator.Send(new GetPostInput(id), cancellationToken);
+
+        if (post.UserId != userId)
+        {
+            return Forbid();
+        }
+
+        var input = new DeletePostInput(id, userId.Value);
+        await _mediator.Send(input, cancellationToken);
 
         return NoContent();
     }
@@ -91,18 +118,33 @@ public class PostsController : ControllerBase
     public async Task<IActionResult> Update(
         [FromRoute] Guid id,
         [FromBody] UpdatePostApiInput apiInput,
-        CancellationToken cancellationToken
+        CancellationToken cancellationToken 
     )
     {
+        var userId = User.GetUserId();
+        if (userId == null)
+        {
+            return Forbid();
+        }
+
+        var post = await _mediator.Send(new GetPostInput(id), cancellationToken);
+
+        if (post.UserId != userId)
+        {
+            return Forbid();
+        }
+
         var input = new UpdatePostInput(
             id,
             apiInput.Title,
-            apiInput.Content
+            apiInput.Content,
+            userId.Value
         );
         var result = await _mediator.Send(input, cancellationToken);
         return Ok(new ApiResponse<PostModelOutput>(result));
     }
 
+    [AllowAnonymous]
     [HttpGet]
     [ProducesResponseType(typeof(ListPostsOutput), StatusCodes.Status200OK)]
     public async Task<IActionResult> List(

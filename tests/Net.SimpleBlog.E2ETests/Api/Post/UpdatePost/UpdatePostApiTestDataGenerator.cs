@@ -12,7 +12,7 @@ public class UpdatePostApiTestDataGenerator
             switch (index % totalInvalidCases)
             {
                 case 0:
-                    var input1 = fixture.GetInput(Guid.NewGuid());
+                    var input1 = fixture.GetInput(fixture.AuthenticatedUser.Id);
                     input1.Title = fixture.GetInvalidShortTitle();
                     invalidInputsList.Add(new object[]
                     {
@@ -21,7 +21,7 @@ public class UpdatePostApiTestDataGenerator
                     });
                     break;
                 case 1:
-                    var input2 = fixture.GetInput(Guid.NewGuid());
+                    var input2 = fixture.GetInput(fixture.AuthenticatedUser.Id);
                     input2.Title = fixture.GetInvalidTooLongTitle();
                     invalidInputsList.Add(new object[]
                     {
@@ -30,7 +30,7 @@ public class UpdatePostApiTestDataGenerator
                     });
                     break;
                 case 2:
-                    var input3 = fixture.GetInput(Guid.NewGuid());
+                    var input3 = fixture.GetInput(fixture.AuthenticatedUser.Id);
                     input3.Content = fixture.GetInvalidShortContent();
                     invalidInputsList.Add(new object[]
                     {
@@ -39,7 +39,7 @@ public class UpdatePostApiTestDataGenerator
                     });
                     break;
                 case 3:
-                    var input4 = fixture.GetInput(Guid.NewGuid());
+                    var input4 = fixture.GetInput(fixture.AuthenticatedUser.Id);
                     input4.Content = fixture.GetInvalidTooLongContent();
                     invalidInputsList.Add(new object[]
                     {

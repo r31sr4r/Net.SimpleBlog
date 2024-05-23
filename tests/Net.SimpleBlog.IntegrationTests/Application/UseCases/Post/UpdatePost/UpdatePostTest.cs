@@ -105,6 +105,7 @@ public class UpdatePostTest
         );
         var useCase = new UseCase.UpdatePost(repository, unitOfWork);
         input.Id = examplePosts[0].Id;
+        input.UserId = examplePosts[0].UserId;
 
         var task = async ()
             => await useCase.Handle(input, CancellationToken.None);
@@ -113,5 +114,37 @@ public class UpdatePostTest
             .ThrowAsync<EntityValidationException>()
             .WithMessage(expectedMessage);
     }
+
+    [Fact(DisplayName = nameof(ThrowWhenUserIsNotOwner))]
+    [Trait("Integration/Application", "UpdatePost - Use Cases")]
+    public async Task ThrowWhenUserIsNotOwner()
+    {
+        var dbContext = _fixture.CreateDbContext();
+        var post = _fixture.GetValidPost();
+        var anotherUserId = Guid.NewGuid();
+
+        await dbContext.AddRangeAsync(_fixture.GetPostsList());
+        var trackingInfo = await dbContext.AddAsync(post);
+        dbContext.SaveChanges();
+        trackingInfo.State = EntityState.Detached;
+
+        var repository = new PostRepository(dbContext);
+        var unitOfWork = new UnitOfWork(dbContext);
+        var useCase = new UseCase.UpdatePost(repository, unitOfWork);
+
+        var input = new UpdatePostInput(post.Id, "New Title", "New Content", anotherUserId);
+
+        Func<Task> task = async () => await useCase.Handle(input, CancellationToken.None);
+
+        await task.Should().ThrowAsync<UnauthorizedAccessException>()
+            .WithMessage("You are not the owner of this post.");
+
+        var dbPost = await dbContext.Posts.FindAsync(post.Id);
+        dbPost.Should().NotBeNull();
+        dbPost!.Title.Should().Be(post.Title);
+        dbPost.Content.Should().Be(post.Content);
+        dbPost.UserId.Should().Be(post.UserId);
+    }
+
 }
 
