@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Net.SimpleBlog.Infra.Data.EF;
 
@@ -10,9 +11,10 @@ using Net.SimpleBlog.Infra.Data.EF;
 namespace Net.SimpleBlog.Infra.Data.EF.Migrations
 {
     [DbContext(typeof(NetSimpleBlogDbContext))]
-    partial class NetSimpleBlogDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240522201041_CreatePostTable")]
+    partial class CreatePostTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

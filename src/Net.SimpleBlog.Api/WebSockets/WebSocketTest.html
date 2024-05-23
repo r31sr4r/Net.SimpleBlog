@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>WebSocket Test</title>
+</head>
+<body>
+    <h1>WebSocket Test</h1>
+    <script>
+        const socket = new WebSocket('wss://localhost:7097/ws');
+
+        socket.addEventListener('open', function (event) {
+            console.log('WebSocket is open now.');
+        });
+
+        socket.addEventListener('message', function (event) {
+            console.log('Message from server ', event.data);
+        });
+
+        socket.addEventListener('close', function (event) {
+            console.log('WebSocket is closed now.');
+        });
+
+        socket.addEventListener('error', function (event) {
+            console.error('WebSocket error observed:', event);
+        });
+    </script>
+</body>
+</html>

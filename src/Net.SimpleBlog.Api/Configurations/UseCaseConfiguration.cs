@@ -24,6 +24,7 @@ public static class UseCaseConfiguration
        )
     {
         services.AddTransient<IUserRepository, UserRepository>();
+        services.AddScoped<IPostRepository, PostRepository>();
         services.AddTransient<IUnitOfWork, UnitOfWork>();
         return services;
     }
