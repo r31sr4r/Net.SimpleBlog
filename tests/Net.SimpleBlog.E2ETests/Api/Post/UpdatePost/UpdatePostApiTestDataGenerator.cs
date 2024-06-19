@@ -7,6 +7,8 @@ public class UpdatePostApiTestDataGenerator
         var invalidInputsList = new List<object[]>();
         var totalInvalidCases = 4;
 
+        fixture.Authenticate().GetAwaiter().GetResult();
+
         for (int index = 0; index < totalInvalidCases; index++)
         {
             switch (index % totalInvalidCases)
